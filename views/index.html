@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Home</title>
+    <style>
+      header,
+      .instructions,
+      .results {
+        margin-left: 5%;
+      }
+      .instructions > p {
+        margin-left: 1%;
+      }
+      ul {
+        list-style-type: none;
+      }
+      form {
+        display: grid;
+      }
+      .input_container {
+        place-self: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>
+        Enter an Imperial or Metric unit that corresponds to the format list
+        below
+      </h1>
+    </header>
+    <br />
+    <br />
+    <section class="instructions">
+      <h3>Intructions</h3>
+      <p>Format has to follow the examples below <strong>exactly</strong>.</p>
+      <p>
+        Units are in short form (i.e. <strong>km</strong> instead of
+        <strong>Kilometers</strong>)
+      </p>
+      <p>All lowercase</p>
+      <ol>
+        <li>
+          Convert Kilometers to Miles.
+          <strong> Example 3mi returns 4.82802km</strong>
+        </li>
+        <li>
+          Miles to Kilometres.
+          <strong>Example 3km returns 1.86411mi </strong>
+        </li>
+        <li>
+          Kilograms to Pounds.
+          <strong>Example 1kg returns 2.20462lbs</strong>
+        </li>
+        <li>
+          Pounds to Kilograms.
+          <strong>Example 3lbs returns 1.3607kg</strong>
+        </li>
+        <li>
+          Centimeters to Inches
+          <strong>Example 1cm returns 1.1811in </strong>
+        </li>
+        <li>
+          Inches to Centimeters
+          <strong>Example 3in returns 7.6200cm</strong>
+        </li>
+        <li>Liters to Gallons <strong>Example 3L returns 0.7925gal</strong></li>
+        <li>
+          Gallons to Literes <strong>Example 3gal returns 11.3562L</strong>
+        </li>
+      </ol>
+    </section>
+
+    <form class="form">
+      <div class="input_container">
+        <input
+          type="text"
+          name="unit"
+          class="unit"
+          placeholder="example --> 3km"
+        />
+        <input class="button" type="submit" value="submit" />
+      </div>
+    </form>
+    <section class="results">
+      <p class="result"></p>
+      <p class="fullData"></p>
+    </section>
+  </body>
+  <script defer>
+    const BUTTON = document.querySelector(".button");
+    const INPUT = document.querySelector(".unit");
+    let RESULT = document.querySelector(".result");
+    const FULLDATA = document.querySelector(".fullData");
+
+    BUTTON.onclick = async e => {
+      e.preventDefault();
+      fetch("/api/conversion", {
+        method: "post",
+        body: JSON.stringify({
+          data: INPUT.value
+        }),
+        headers: { "Content-Type": "application/json" }
+      })
+        .then(data => data.json())
+        .then(data => {
+          const { string, error } = data;
+
+          if (error) {
+            RESULT.innerHTML = error;
+            return;
+          }
+          RESULT.innerHTML = string;
+          FULLDATA.innerHTML = JSON.stringify(data);
+        })
+        .catch(() => (RESULT.innerHTML = "invalid format"));
+    };
+  </script>
+</html>

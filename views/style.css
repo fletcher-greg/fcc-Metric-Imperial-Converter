@@ -1,0 +1,10 @@
+header,
+.instructions {
+  text-align: center;
+}
+form {
+  display: grid;
+}
+.input_container {
+  place-self: center;
+}
